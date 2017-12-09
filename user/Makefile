@@ -25,6 +25,7 @@ POLARSSL_OBJS = polarssl/rsa.o polarssl/entropy.o polarssl/ctr_drbg.o \
                 polarssl/sha1.o polarssl/sha512.o polarssl/aes.o polarssl/entropy_poll.o \
                 polarssl/aesni.o polarssl/timing.o polarssl/md_wrap.o polarssl/sha256.o \
                 polarssl/md5.o polarssl/ripemd160.o polarssl/net.o polarssl/aes_cmac128.o
+LLVM_OPENSGX_LIB = libllvm-opensgx.a
 LDLIBS = -L. -lpolarssl -lelf
 
 CFLAGS := $(BASE_CFLAGS) -fno-stack-protector -fvisibility=hidden
@@ -34,9 +35,12 @@ BINS := $(patsubst %.c,%,$(wildcard test/*.c)) \
         $(patsubst %.c,%,$(wildcard test/openssl/*.c)) \
         $(patsubst %.c,%,$(wildcard test/tor/sgx-*.c)) \
         $(patsubst %.c,%,$(wildcard non_enclave/*.c))
-ALL  := sgx-tool sgx-runtime $(BINS) $(POLARSSL_LIB) sgx-host
+ALL  := sgx-tool sgx-runtime $(BINS) $(POLARSSL_LIB) sgx-host $(LLVM_OPENSGX_LIB)
 
 all: $(ALL)
+
+$(LLVM_OPENSGX_LIB) : $(SGX_HOST_OBJS) $(POLARSSL_OBJS)
+	$(AR) rs $@ $^
 
 sgx-runtime: sgx-runtime.o $(SGX_HOST_OBJS) $(POLARSSL_LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
