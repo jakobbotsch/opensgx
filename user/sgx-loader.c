@@ -165,7 +165,7 @@ void *load_elf_enclave(char *filename, size_t *npages, void **entry, int *offset
             return NULL;
         }
         if (start < phdr.p_vaddr) {
-            memset((void *)p, 0, start - phdr.p_vaddr);
+            memset((void *)p, 0, phdr.p_vaddr - start);
         }
         if (fend > fdataend) {
             memset((char *)p + (fdataend - start), 0,
