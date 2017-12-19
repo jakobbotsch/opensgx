@@ -39,7 +39,7 @@ ALL  := sgx-tool sgx-runtime $(BINS) $(POLARSSL_LIB) sgx-host $(LLVM_OPENSGX_LIB
 
 all: $(ALL)
 
-$(LLVM_OPENSGX_LIB) : $(SGX_HOST_OBJS) $(POLARSSL_OBJS)
+$(LLVM_OPENSGX_LIB) : llvm-opensgx.o $(SGX_HOST_OBJS) $(POLARSSL_OBJS)
 	$(AR) rs $@ $^
 
 sgx-runtime: sgx-runtime.o $(SGX_HOST_OBJS) $(POLARSSL_LIB)
