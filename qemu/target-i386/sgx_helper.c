@@ -1165,7 +1165,8 @@ void helper_mem_access(CPUX86State *env, target_ulong a0, int operation)
             }
 	    */
             sgx_dbg(trace, "!Mode EINIT Range: Accessed %lX ", mem_addr);
-            //raise_exception(env, EXCP0D_GPF);
+            puts("Non-enclave accessed enclave memory");
+            raise_exception(env, EXCP0D_GPF);
         }
     }
 }
