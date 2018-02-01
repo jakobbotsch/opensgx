@@ -51,6 +51,11 @@ sgx-host: sgx-host.o $(SGX_HOST_OBJS) $(POLARSSL_LIB)
 libpolarssl.a : $(POLARSSL_OBJS)
 	$(AR) rs $@ $^
 
+# Clang required for this file as GCC
+# does not allow 
+llvm-opensgx.o: llvm-opensgx.c
+	clang -c -fPIC $(CFLAGS) -o $@ $<
+
 polarssl/%.o: polarssl/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
